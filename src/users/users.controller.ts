@@ -1,37 +1,56 @@
 import {
   Controller,
-  Delete,
   Get,
   Param,
-  Patch,
   Post,
-  Put,
+  Patch,
   Query,
   Body,
-  Headers,
-  Ip,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { PatchUserDto } from './dtos/patch-user.dto';
 
 @Controller('users')
 export class UsersController {
-  // Matches: /users/123   and   /users/123/foo
-  @Get(':id{/:optional}')
+  /**
+   * Final Endpoint – /users/:id?  (handled via two explicit paths)
+   * - /users -> return all users with default pagination
+   * - /users/:id -> return one user (id is numeric)
+   * Query:
+   * - limit: integer, default 10
+   * - page:  integer, default 1
+   */
+
+  @Get()
+  @Get(':id') // second path, same handler
   public getUsers(
-    @Param('id') id: string,
-    @Param('optional') optional?: string,
-    @Query('limit') limit?: string,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Param('id') id?: string, // optional; provided only for /users/:id
+
   ) {
-    console.log({ id, optional, limit });
-    return 'You sent a get request to users endpoint';
+    const numericId = id !== undefined ? Number(id) : undefined;
+    // TODO: validate numericId if you need strict numeric-only
+    // if (id !== undefined && Number.isNaN(numericId)) throw new BadRequestException('id must be a number');
+
+    if (numericId !== undefined) {
+      // return a single user by id
+      return { type: 'single', id: numericId };
+    }
+
+    // return paginated users
+    return { type: 'list', limit, page };
   }
 
   @Post()
-  public createUsers(
-    @Body() request: any,
-    @Headers() headers: Record<string, any>,
-    @Ip() ip: string,
-  ) {
-    console.log({ request, headers, ip });
-    return 'You sent a post request to users endpoint';
+  public createUsers(@Body() createUserDto: CreateUserDto) {
+    return { ok: true, data: createUserDto };
+  }
+
+  @Patch()
+  public patchUser(@Body() patchUserDto: PatchUserDto) {
+    return { ok: true, data: patchUserDto };
   }
 }
