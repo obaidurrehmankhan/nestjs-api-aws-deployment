@@ -14,22 +14,24 @@ import {
 
 @Controller('users')
 export class UsersController {
-  @Get('/:id/:optional?')
-  public getUsers(@Param('id') id: any, @Query('limit') limit: any) {
-    console.log(id);
-    console.log(limit);
+  // Matches: /users/123   and   /users/123/foo
+  @Get(':id{/:optional}')
+  public getUsers(
+    @Param('id') id: string,
+    @Param('optional') optional?: string,
+    @Query('limit') limit?: string,
+  ) {
+    console.log({ id, optional, limit });
     return 'You sent a get request to users endpoint';
   }
 
   @Post()
   public createUsers(
     @Body() request: any,
-    @Headers() headers: any,
-    @Ip() ip: any,
+    @Headers() headers: Record<string, any>,
+    @Ip() ip: string,
   ) {
-    console.log(request);
-    console.log(headers);
-    console.log(ip);
+    console.log({ request, headers, ip });
     return 'You sent a post request to users endpoint';
   }
 }
