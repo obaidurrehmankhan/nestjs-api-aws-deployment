@@ -2,55 +2,65 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   Patch,
+  Post,
   Query,
   Body,
-  DefaultValuePipe,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { GetUsersParamDto } from './dtos/get-users-param.dto';
 import { PatchUserDto } from './dtos/patch-user.dto';
+import { UsersService } from './providers/users.service';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
-  /**
-   * Final Endpoint – /users/:id?  (handled via two explicit paths)
-   * - /users -> return all users with default pagination
-   * - /users/:id -> return one user (id is numeric)
-   * Query:
-   * - limit: integer, default 10
-   * - page:  integer, default 1
-   */
+  constructor(
+    // Injecting Users Service
+    private readonly usersService: UsersService,
+  ) { }
 
   @Get()
-  @Get(':id') // second path, same handler
+  @Get(':id?')
+  @ApiOperation({
+    summary: 'Fetches a list of registered users on the application.',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: String,
+    description: 'The upper limit of pages you want the pagination to return',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'page',
+    type: String,
+    description:
+      'The position of the page number that you want the API to return',
+    required: false,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Users fetched successfully based on the query',
+  })
   public getUsers(
+    @Param() getUserParamDto: GetUsersParamDto,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Param('id') id?: string, // optional; provided only for /users/:id
-
   ) {
-    const numericId = id !== undefined ? Number(id) : undefined;
-    // TODO: validate numericId if you need strict numeric-only
-    // if (id !== undefined && Number.isNaN(numericId)) throw new BadRequestException('id must be a number');
-
-    if (numericId !== undefined) {
-      // return a single user by id
-      return { type: 'single', id: numericId };
-    }
-
-    // return paginated users
-    return { type: 'list', limit, page };
+    return this.usersService.findAll(getUserParamDto, limit, page);
   }
 
   @Post()
   public createUsers(@Body() createUserDto: CreateUserDto) {
-    return { ok: true, data: createUserDto };
+    console.log(createUserDto instanceof CreateUserDto);
+    return 'You sent a post request to users endpoint';
   }
 
   @Patch()
   public patchUser(@Body() patchUserDto: PatchUserDto) {
-    return { ok: true, data: patchUserDto };
+    return patchUserDto;
   }
 }
