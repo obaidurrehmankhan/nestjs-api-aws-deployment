@@ -27,7 +27,7 @@ export class UsersService {
     // Injecting Auth Service
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
     // Check if user with email exists
@@ -71,11 +71,9 @@ export class UsersService {
   /**
    * Public method used to find one user using the ID of the user
    */
-  public findOneById(id: string) {
-    return {
-      id: 1234,
-      firstName: 'Alice',
-      email: 'alice@doe.com',
-    };
+  public async findOneById(id: number) {
+    return await this.usersRepository.findOneBy({
+      id,
+    });
   }
 }
