@@ -1,6 +1,3 @@
-/*
- * Swagger Specific Imports
- */
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
