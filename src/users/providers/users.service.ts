@@ -1,17 +1,17 @@
+import { Repository } from 'typeorm';
 import { GetUsersParamDto } from '../dtos/get-users-param.dto';
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
-  InternalServerErrorException,
-  forwardRef,
+  RequestTimeoutException,
 } from '@nestjs/common';
 import { User } from '../user.entity';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { AuthService } from 'src/auth/providers/auth.service';
-import { ConfigType } from '@nestjs/config';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import profileConfig from '../config/profile.config';
 
 /**
@@ -21,36 +21,55 @@ import profileConfig from '../config/profile.config';
 export class UsersService {
   constructor(
     /**
-     * Injecting User repository into UsersService
-     * */
+     * Injecting usersRepository
+     */
     @InjectRepository(User)
     private usersRepository: Repository<User>,
 
-    // Injecting Auth Service
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
-
-    // Injecting ConfigService
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
   ) { }
 
   public async createUser(createUserDto: CreateUserDto) {
-    // Check if user with email exists
-    const existingUser = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
-    });
+    let existingUser = undefined;
 
-    /**
-     * Handle exceptions if user exists later
-     * */
+    try {
+      // Check is user exists with same email
+      existingUser = await this.usersRepository.findOne({
+        where: { email: createUserDto.email },
+      });
+    } catch (error) {
+      // Might save the details of the exception
+      // Information which is sensitive
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error connecting to the database',
+        },
+      );
+    }
 
-    // Try to create a new user
-    // - Handle Exceptions Later
+    // Handle exception
+    if (existingUser) {
+      throw new BadRequestException(
+        'The user already exists, please check your email.',
+      );
+    }
+
+    // Create a new user
     let newUser = this.usersRepository.create(createUserDto);
-    newUser = await this.usersRepository.save(newUser);
 
-    // Create the user
+    try {
+      newUser = await this.usersRepository.save(newUser);
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error connecting to the the datbase',
+        },
+      );
+    }
+
     return newUser;
   }
 
@@ -62,27 +81,47 @@ export class UsersService {
     limt: number,
     page: number,
   ) {
-    // Testing profileConfiguration
-    console.log(this.profileConfiguration);
-    console.log(this.profileConfiguration.apiKey);
-    return [
+    throw new HttpException(
       {
-        firstName: 'John',
-        email: 'john@doe.com',
+        status: HttpStatus.MOVED_PERMANENTLY,
+        error: 'The API endpoint does not exist',
+        fileName: 'users.service.ts',
+        lineNumber: 88,
       },
+      HttpStatus.MOVED_PERMANENTLY,
       {
-        firstName: 'Alice',
-        email: 'alice@doe.com',
+        cause: new Error(),
+        description: 'Occured because the API endpoint was permanently moved',
       },
-    ];
+    );
   }
 
   /**
    * Public method used to find one user using the ID of the user
    */
   public async findOneById(id: number) {
-    return await this.usersRepository.findOneBy({
-      id,
-    });
+    let user = undefined;
+
+    try {
+      user = await this.usersRepository.findOneBy({
+        id,
+      });
+    } catch (error) {
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error connecting to the the datbase',
+        },
+      );
+    }
+
+    /**
+     * Handle the user does not exist
+     */
+    if (!user) {
+      throw new BadRequestException('The user id does not exist');
+    }
+
+    return user;
   }
 }
