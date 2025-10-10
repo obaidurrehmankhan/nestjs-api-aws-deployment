@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 
 import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
-import { CreateUserDto } from '../dtos/create-user.dto';
 import { DataSource } from 'typeorm';
 import { User } from '../user.entity';
 
@@ -16,7 +15,7 @@ export class UsersCreateManyProvider {
      * Inject the datasource
      */
     private dataSource: DataSource,
-  ) {}
+  ) { }
 
   public async createMany(createManyUsersDto: CreateManyUsersDto) {
     let newUsers: User[] = [];
