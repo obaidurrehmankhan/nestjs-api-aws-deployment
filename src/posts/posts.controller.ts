@@ -28,7 +28,8 @@ export class PostsController {
   /*
    * GET localhost:3000/posts/:userId
    */
-  @Get(':userId?')
+  @Get()
+  @Get('/:userId?')
   public getPosts(
     @Param('userId') userId: string,
     @Query() postQuery: GetPostsDto,

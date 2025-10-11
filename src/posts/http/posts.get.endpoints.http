@@ -5,5 +5,5 @@
   exports.endDate = date.toString();
 }}
 GET  http://localhost:3000/posts/
-  ?limit=4
+  ?limit=1
   &page=1
