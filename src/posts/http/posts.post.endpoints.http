@@ -3,7 +3,7 @@
 }}
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoibWFyazFAZG9lLmNvbSIsImlhdCI6MTc2MDM1MzM3OCwiZXhwIjoxNzYwMzU2OTc4LCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdDozMDAwIn0.MYtpde8DRYHV7D-yORid0LJvwtg0oKj1twF82Kz6_kQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjE5LCJlbWFpbCI6Im1hcmtAZG9lLmNvbSIsImlhdCI6MTcxNzc2MTUyMSwiZXhwIjoxNzE3NzY1MTIxLCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdDozMDAwIn0.6FENG3lIPBvph6Jxewg1C_xJKe1ChLYF4GnXHJG9yMY
 
 {
   "title": "What's new with NestJS",

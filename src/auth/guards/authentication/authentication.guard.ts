@@ -21,23 +21,23 @@ export class AuthenticationGuard implements CanActivate {
     AuthType,
     CanActivate | CanActivate[]
   > = {
-      [AuthType.Bearer]: this.accessTokenGuard,
-      [AuthType.None]: { canActivate: () => true },
-    };
+    [AuthType.Bearer]: this.accessTokenGuard,
+    [AuthType.None]: { canActivate: () => true },
+  };
 
   constructor(
     private readonly reflector: Reflector,
     private readonly accessTokenGuard: AccessTokenGuard,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const authTypes = this.reflector.getAllAndOverride<AuthType[]>(
       AUTH_TYPE_KEY,
       [context.getHandler(), context.getClass()],
     ) ?? [AuthenticationGuard.defaultAuthType];
-    console.log(authTypes)
+
     const guards = authTypes.map((type) => this.authTypeGuardMap[type]).flat();
-    console.log(guards)
+
     // Declare the default error
     let error = new UnauthorizedException();
 
