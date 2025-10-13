@@ -15,7 +15,7 @@ export class UsersCreateManyProvider {
      * Inject the datasource
      */
     private dataSource: DataSource,
-  ) { }
+  ) {}
 
   public async createMany(createManyUsersDto: CreateManyUsersDto) {
     let newUsers: User[] = [];

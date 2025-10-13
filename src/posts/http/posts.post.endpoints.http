@@ -1,8 +1,9 @@
 {{
-  export.publishOn = new Date().toString()
+  exports.publishOn = new Date().toString()
 }}
 POST http://localhost:3000/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjQsImVtYWlsIjoibWFyazFAZG9lLmNvbSIsImlhdCI6MTc2MDM1MzM3OCwiZXhwIjoxNzYwMzU2OTc4LCJhdWQiOiJsb2NhbGhvc3Q6MzAwMCIsImlzcyI6ImxvY2FsaG9zdDozMDAwIn0.MYtpde8DRYHV7D-yORid0LJvwtg0oKj1twF82Kz6_kQ
 
 {
   "title": "What's new with NestJS",
@@ -17,6 +18,5 @@ Content-Type: application/json
   "metaOptions" : {
       "metaValue": "{\"sidebarEnabled\": true, \"footerActive\":true}"
     },
-  "authorId":1,
   "tags": [1,2]
 }
