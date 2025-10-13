@@ -32,7 +32,7 @@ export class UsersController {
   constructor(
     // Injecting Users Service
     private readonly usersService: UsersService,
-  ) { }
+  ) {}
 
   @Get()
   @Get(':id?')
