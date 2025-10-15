@@ -61,23 +61,4 @@ describe('[Users] @Post Endpoints', () => {
       });
   });
 
-  // it('/users - password is not returned in response', () => {
-  //   return request(httpServer)
-  //     .post('/users')
-  //     .send(completeUser)
-  //     .expect(201)
-  //     .then(({ body }) => {
-  //       expect(body.data.password).toBeUndefined();
-  //     });
-  // });
-
-  // it('/users - googleId is not returned in response', () => {
-  //   return request(httpServer)
-  //     .post('/users')
-  //     .send(completeUser)
-  //     .expect(201)
-  //     .then(({ body }) => {
-  //       expect(body.data.googleId).toBeUndefined();
-  //     });
-  // });
 });

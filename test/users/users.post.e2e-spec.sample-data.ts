@@ -1,4 +1,3 @@
-// test/users/users.post.e2e-spec.sample-data.ts
 import { faker as F } from '@faker-js/faker';
 
 // Support both APIs: v8+ => person.*, v7 => name.*

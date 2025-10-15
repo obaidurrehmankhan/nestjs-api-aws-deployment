@@ -163,9 +163,29 @@ npm run test:e2e
 
 ## 🚢 Deployment (basic)
 
-* Build: `npm run build` → run `node dist/main.js`
-* Process manager: **PM2** (add an ecosystem file if you prefer)
-* Secure **env** injection (no secrets in code), strict CORS, and lock down Swagger in prod
+* Deploy NestJS + PostgreSQL on EC2 with Nginx + PM2 
+**Why this trio**
+
+*** EC2: *** Flexible Linux VM you fully control (cost-effective, scalable).
+
+*** Nginx: ***  Fast reverse proxy + TLS terminator in front of your Node app.
+
+*** PM2:*** Keeps your NestJS process alive, restarts on crash, supports zero-downtime reloads.
+
+**High-level Architecture**
+
+Internet → Nginx (80/443) → PM2-managed NestJS (localhost:3000) → PostgreSQL (local or RDS)
+
+**Steps for Deployment**
+ - Set the home: Spin up an EC2 Linux server, install Node, PM2, Nginx, and set up PostgreSQL (RDS or local). EC2 is the house; Postgres is the data room.
+
+ - Put the app in: Copy your NestJS code, add .env with DB creds, build the app, and run DB migrations so tables exist.
+
+ - Keep it alive: Start the app with PM2 so it auto-restarts on crashes/reboots, listening only on localhost:3000.
+
+ - Open the door: Point your domain to the EC2 IP; configure Nginx to forward /:443 → localhost:3000 and add HTTPS (Let’s Encrypt).
+
+ - Ship updates safely: On each release do git pull → build → migrate → pm2 reload (no downtime). Final result: your API is live at https://your-domain, stable and backed by PostgreSQL.
 
 ---
 
