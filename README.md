@@ -161,7 +161,7 @@ npm run test:e2e
 
 ## 🚢 Basic Deployment (NestJS + PostgreSQL on EC2 with Nginx + PM2)
 
-### Why this trio**
+### Why this trio
 
 **EC2:** Flexible Linux VM you fully control (cost-effective, scalable).
 
