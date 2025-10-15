@@ -1,5 +1,6 @@
 POST http://localhost:3000/uploads/file
 Content-Type: multipart/form-data; boundary=WebKitFormBoundary
+
 file
 --WebKitFormBoundary
 Content-Disposition: form-data; name="file"; filename="test-image.jpeg"
