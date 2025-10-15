@@ -33,8 +33,6 @@ Production-minded **NestJS boilerplate** you can clone to kickstart real project
 * **Understanding Modules** — app structure, feature modules, clean imports/exports
 * **Validation & Pipes** — DTO validation with `class-validator`, transformation with `ValidationPipe`
 * **DTO-based Requests/Responses** — request/response shapes via DTO classes
-
-  * *Note:* DTOs are **not** pipes; they work **with** pipes (e.g., `ValidationPipe`) to validate/transform data
 * **Dependency Injection (DI)** — providers/services, tokens, scopes, module wiring
 * **API Documentation** — **Swagger (OpenAPI)** & **Compodoc** code docs
 * **SQL & Complex Relations** — one-to-one, one-to-many, many-to-many
@@ -161,16 +159,15 @@ npm run test:e2e
 
 ---
 
-## 🚢 Deployment (basic)
+## 🚢 Basic Deployment (NestJS + PostgreSQL on EC2 with Nginx + PM2)
 
-* Deploy NestJS + PostgreSQL on EC2 with Nginx + PM2 
-**Why this trio**
+### Why this trio**
 
-*** EC2: *** Flexible Linux VM you fully control (cost-effective, scalable).
+**EC2:** Flexible Linux VM you fully control (cost-effective, scalable).
 
-*** Nginx: ***  Fast reverse proxy + TLS terminator in front of your Node app.
+**Nginx:**  Fast reverse proxy + TLS terminator in front of your Node app.
 
-*** PM2:*** Keeps your NestJS process alive, restarts on crash, supports zero-downtime reloads.
+**PM2:** Keeps your NestJS process alive, restarts on crash, supports zero-downtime reloads.
 
 **High-level Architecture**
 
